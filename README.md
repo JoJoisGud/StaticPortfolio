@@ -70,17 +70,20 @@ Then navigate to `http://localhost:8080` in your browser.
 The easiest way to customize your portfolio is through the admin panel:
 
 1. Navigate to `admin.html` in your browser
-2. Login with the password: `admin123`
-3. Edit any content directly in the admin interface:
+2. Login with the default password (found in `admin.js`)
+3. **IMPORTANT**: Immediately change the password by editing `ADMIN_PASSWORD` in `admin.js`
+4. Edit any content directly in the admin interface:
    - Artist name and tagline
    - About section text
    - Social media links
    - Gallery artwork details
    - Commission status
-4. Click "Save All Changes" to apply updates
-5. Changes will immediately appear on the main pages
+5. Click "Save All Changes" to apply updates
+6. Changes will immediately appear on the main pages
 
-**Note**: Changes are stored in your browser's localStorage. To change the admin password, edit the `ADMIN_PASSWORD` constant in `admin.js`.
+**Security Warning**: The admin panel uses client-side authentication which is NOT secure for production. Anyone with access to the source code can view the password. For a production website, implement proper server-side authentication with a backend. This admin panel is designed for simple personal portfolios or local use only.
+
+**Note**: Changes are stored in your browser's localStorage. Clearing browser data will reset all customizations.
 
 #### Manual Customization
 

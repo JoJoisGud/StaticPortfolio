@@ -2,6 +2,23 @@
 const CONTENT_KEY = 'portfolio_content';
 const SESSION_KEY = 'portfolio_admin_session';
 
+// HTML escape function to prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Escape HTML attributes
+function escapeAttribute(text) {
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/'/g, '&#x27;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
 // Show admin link if logged in
 function checkAndShowAdminLink() {
     const session = localStorage.getItem(SESSION_KEY);
@@ -31,7 +48,7 @@ function applyContent(content) {
     if (artistTagline) artistTagline.textContent = content.artistTagline;
     
     const profileImg = document.getElementById('profile-img');
-    if (profileImg) profileImg.src = content.profileImage;
+    if (profileImg) profileImg.src = escapeAttribute(content.profileImage);
     
     // Update about section
     const aboutSection = document.querySelector('.about-section .container');
@@ -45,9 +62,9 @@ function applyContent(content) {
     const linksCard = document.querySelector('.links-card');
     if (linksCard) {
         linksCard.innerHTML = content.socialLinks.map(link => `
-            <a href="${link.url}" class="social-link" target="_blank">
-                <span class="link-icon">${link.icon}</span>
-                <span class="link-text">${link.text}</span>
+            <a href="${escapeAttribute(link.url)}" class="social-link" target="_blank">
+                <span class="link-icon">${escapeHtml(link.icon)}</span>
+                <span class="link-text">${escapeHtml(link.text)}</span>
             </a>
         `).join('');
     }
@@ -57,10 +74,10 @@ function applyContent(content) {
     if (galleryGrid) {
         galleryGrid.innerHTML = content.galleryItems.map(item => `
             <div class="gallery-item">
-                <img src="${item.image}" alt="${item.title}">
+                <img src="${escapeAttribute(item.image)}" alt="${escapeAttribute(item.title)}">
                 <div class="gallery-overlay">
-                    <h3>${item.title}</h3>
-                    <p>${item.category}</p>
+                    <h3>${escapeHtml(item.title)}</h3>
+                    <p>${escapeHtml(item.category)}</p>
                 </div>
             </div>
         `).join('');
@@ -74,7 +91,7 @@ function applyContent(content) {
         statusCard.style.borderLeftColor = isOpen ? '#10b981' : '#ef4444';
         statusCard.innerHTML = `
             <h3 style="color: ${isOpen ? '#10b981' : '#ef4444'}">📖 Status: ${isOpen ? 'Open' : 'Closed'}</h3>
-            <p>${content.commissionMessage}</p>
+            <p>${escapeHtml(content.commissionMessage)}</p>
         `;
     }
 }

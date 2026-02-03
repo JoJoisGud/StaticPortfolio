@@ -1,9 +1,29 @@
 // Admin Panel JavaScript
 
 // Default password (in a real application, this would be server-side)
+// SECURITY NOTE: This is CLIENT-SIDE authentication and is NOT secure for production.
+// For a production site, implement proper server-side authentication.
+// Change this password immediately after deployment.
 const ADMIN_PASSWORD = 'admin123';
 const SESSION_KEY = 'portfolio_admin_session';
 const CONTENT_KEY = 'portfolio_content';
+
+// HTML escape function to prevent XSS
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Escape HTML attributes
+function escapeAttribute(text) {
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/'/g, '&#x27;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
 
 // Default content structure
 const defaultContent = {
@@ -119,9 +139,9 @@ function renderSocialLinks(links) {
         const linkDiv = document.createElement('div');
         linkDiv.className = 'link-item-edit';
         linkDiv.innerHTML = `
-            <input type="text" class="small-input" placeholder="Icon" value="${link.icon}" data-link-index="${index}" data-link-field="icon">
-            <input type="text" placeholder="Link Text" value="${link.text}" data-link-index="${index}" data-link-field="text">
-            <input type="text" placeholder="URL" value="${link.url}" data-link-index="${index}" data-link-field="url">
+            <input type="text" class="small-input" placeholder="Icon" value="${escapeAttribute(link.icon)}" data-link-index="${index}" data-link-field="icon">
+            <input type="text" placeholder="Link Text" value="${escapeAttribute(link.text)}" data-link-index="${index}" data-link-field="text">
+            <input type="text" placeholder="URL" value="${escapeAttribute(link.url)}" data-link-index="${index}" data-link-field="url">
         `;
         container.appendChild(linkDiv);
     });
@@ -136,19 +156,19 @@ function renderGalleryItems(items) {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'gallery-item-edit';
         itemDiv.innerHTML = `
-            <img src="${item.image}" alt="${item.title}">
+            <img src="${escapeAttribute(item.image)}" alt="${escapeAttribute(item.title)}">
             <div class="item-fields">
                 <div class="form-group" style="margin-bottom: 0.5rem;">
                     <label>Image URL</label>
-                    <input type="text" value="${item.image}" data-gallery-index="${index}" data-gallery-field="image">
+                    <input type="text" value="${escapeAttribute(item.image)}" data-gallery-index="${index}" data-gallery-field="image">
                 </div>
                 <div class="form-group" style="margin-bottom: 0.5rem;">
                     <label>Title</label>
-                    <input type="text" value="${item.title}" data-gallery-index="${index}" data-gallery-field="title">
+                    <input type="text" value="${escapeAttribute(item.title)}" data-gallery-index="${index}" data-gallery-field="title">
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                     <label>Category</label>
-                    <input type="text" value="${item.category}" data-gallery-index="${index}" data-gallery-field="category">
+                    <input type="text" value="${escapeAttribute(item.category)}" data-gallery-index="${index}" data-gallery-field="category">
                 </div>
             </div>
         `;
