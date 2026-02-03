@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Artist Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 0 20px;
+        }
+
+        .login-section {
+            max-width: 400px;
+            margin: 150px auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-section h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            margin-top: 1rem;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c00;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .success-message {
+            background: #efe;
+            color: #080;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .admin-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .admin-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .admin-header h1 {
+            color: var(--primary-color);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .gallery-item-edit {
+            display: flex;
+            gap: 1rem;
+            align-items: start;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .gallery-item-edit img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .gallery-item-edit .item-fields {
+            flex: 1;
+        }
+
+        .link-item-edit {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .link-item-edit input {
+            flex: 1;
+        }
+
+        .small-input {
+            width: 100px !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Menu -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">Portfolio</a>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="commissions.html" class="nav-link">Commissions</a>
+                </li>
+                <li class="nav-item">
+                    <a href="admin.html" class="nav-link active">Admin</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <div id="login-section" class="login-section">
+        <h1>🔐 Admin Login</h1>
+        <div id="error-message" class="error-message"></div>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter admin password" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+        <p style="text-align: center; margin-top: 1rem; color: var(--light-text); font-size: 0.9rem;">
+            Default password: <code>admin123</code>
+        </p>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="admin-container hidden">
+        <div class="admin-header">
+            <h1>Admin Panel</h1>
+            <button onclick="logout()" class="btn btn-secondary" style="width: auto; padding: 0.75rem 2rem;">Logout</button>
+        </div>
+
+        <div id="success-message" class="success-message"></div>
+
+        <!-- Profile Settings -->
+        <div class="admin-section">
+            <h2>Profile Settings</h2>
+            <div class="form-group">
+                <label for="artist-name">Artist Name</label>
+                <input type="text" id="artist-name" placeholder="Artist Name">
+            </div>
+            <div class="form-group">
+                <label for="artist-tagline">Tagline</label>
+                <input type="text" id="artist-tagline" placeholder="Visual & Digital Artist">
+            </div>
+            <div class="form-group">
+                <label for="profile-image">Profile Image URL</label>
+                <input type="text" id="profile-image" placeholder="images/profile.jpg">
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="admin-section">
+            <h2>About Section</h2>
+            <div class="form-group">
+                <label for="about-paragraph-1">About - Paragraph 1</label>
+                <textarea id="about-paragraph-1" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="about-paragraph-2">About - Paragraph 2</label>
+                <textarea id="about-paragraph-2" rows="4"></textarea>
+            </div>
+        </div>
+
+        <!-- Social Links -->
+        <div class="admin-section">
+            <h2>Social Links</h2>
+            <div id="social-links-container">
+                <!-- Links will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Gallery Items -->
+        <div class="admin-section">
+            <h2>Gallery Items</h2>
+            <div id="gallery-items-container">
+                <!-- Gallery items will be dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Commission Status -->
+        <div class="admin-section">
+            <h2>Commission Status</h2>
+            <div class="form-group">
+                <label for="commission-status">Status</label>
+                <select id="commission-status" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 8px;">
+                    <option value="open">Open</option>
+                    <option value="closed">Closed</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="commission-message">Status Message</label>
+                <input type="text" id="commission-message" placeholder="Currently accepting new commission requests">
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="saveChanges()" class="btn" style="max-width: 400px;">Save All Changes</button>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
