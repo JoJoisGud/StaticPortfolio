@@ -20,13 +20,26 @@ A modern, responsive static portfolio website designed for visual and digital ar
 - Terms and conditions
 - Contact button for inquiries
 
+### Admin Panel (admin.html)
+- **Password Protection**: Secure login (default password: `admin123`)
+- **Content Management**: Edit all portfolio content without touching code
+- **Profile Settings**: Update artist name, tagline, and profile image
+- **About Section**: Edit biography paragraphs
+- **Social Links**: Manage all social media links and icons
+- **Gallery Management**: Update artwork titles, categories, and image URLs
+- **Commission Control**: Toggle commission status (Open/Closed) and update messages
+- **Persistent Storage**: Changes saved to browser localStorage
+- **Secure Access**: Admin link only visible when logged in
+
 ## File Structure
 ```
 StaticPortfolio/
 ├── index.html          # Main landing page
 ├── commissions.html    # Commissions information page
+├── admin.html          # Admin panel for content management
 ├── styles.css          # All styling and responsive design
 ├── script.js           # Dynamic effects and animations
+├── admin.js            # Admin panel functionality
 ├── images/             # Image assets
 │   ├── profile.jpg     # Profile photo
 │   └── art1-6.jpg      # Artwork samples
@@ -53,18 +66,36 @@ Then navigate to `http://localhost:8080` in your browser.
 
 ### Customization
 
-#### Replace Images
+#### Using the Admin Panel (Recommended)
+The easiest way to customize your portfolio is through the admin panel:
+
+1. Navigate to `admin.html` in your browser
+2. Login with the password: `admin123`
+3. Edit any content directly in the admin interface:
+   - Artist name and tagline
+   - About section text
+   - Social media links
+   - Gallery artwork details
+   - Commission status
+4. Click "Save All Changes" to apply updates
+5. Changes will immediately appear on the main pages
+
+**Note**: Changes are stored in your browser's localStorage. To change the admin password, edit the `ADMIN_PASSWORD` constant in `admin.js`.
+
+#### Manual Customization
+
+##### Replace Images
 1. Replace `images/profile.jpg` with your profile photo (recommended: 800x800px)
 2. Replace `images/art1.jpg` through `images/art6.jpg` with your artwork (recommended: square format)
 
-#### Update Content
+##### Update Content Manually
 - **Artist Name**: Edit the `<h1 class="artist-name">` in `index.html`
 - **About Text**: Modify the paragraphs in the `about-section`
 - **Social Links**: Update the href attributes in the `links-card` section
 - **Commission Prices**: Edit the pricing in `commissions.html`
 - **Contact Email**: Update the mailto link in the contact section
 
-#### Customize Colors
+##### Customize Colors
 Edit the CSS variables in `styles.css`:
 ```css
 :root {
