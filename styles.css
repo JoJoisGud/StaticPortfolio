@@ -307,9 +307,10 @@ body {
     border-radius: 12px;
     overflow: hidden;
     box-shadow: var(--shadow);
-    transition: all 0.6s ease;
+    transition: transform 0.6s ease, box-shadow 0.6s ease;
     aspect-ratio: 1;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    will-change: transform;
 }
 
 .gallery-item:hover {
