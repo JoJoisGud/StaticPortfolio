@@ -32,7 +32,26 @@
     <section class="landing-section">
         <div class="profile-container">
             <div class="profile-photo">
-                <img src="images/profile.jpg" alt="Artist Profile Photo" id="profile-img">
+                <!-- Rotating sine wave circle -->
+                <svg class="sine-wave-circle" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="waveGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#6366f1;stop-opacity:0.8" />
+                            <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:0.8" />
+                        </linearGradient>
+                        <linearGradient id="waveGradient2" x1="100%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.6" />
+                            <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0.6" />
+                        </linearGradient>
+                    </defs>
+                    <path class="sine-wave-path wave1" d="M 200,200 m -160,0 a 160,160 0 1,1 320,0 a 160,160 0 1,1 -320,0" 
+                          fill="none" stroke="url(#waveGradient1)" stroke-width="3" />
+                    <path class="sine-wave-path wave2" d="M 200,200 m -170,0 a 170,170 0 1,1 340,0 a 170,170 0 1,1 -340,0" 
+                          fill="none" stroke="url(#waveGradient2)" stroke-width="2.5" />
+                </svg>
+                <div>
+                    <img src="images/profile.jpg" alt="Artist Profile Photo" id="profile-img">
+                </div>
             </div>
             <h1 class="artist-name">Artist Name</h1>
             <p class="artist-tagline">Visual & Digital Artist</p>
