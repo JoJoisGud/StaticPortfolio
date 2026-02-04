@@ -18,9 +18,6 @@
                 <li class="nav-item">
                     <a href="commissions.html" class="nav-link">Commissions</a>
                 </li>
-                <li class="nav-item" id="admin-nav-item" style="display: none;">
-                    <a href="admin.html" class="nav-link">Admin</a>
-                </li>
             </ul>
         </div>
     </nav>
@@ -44,11 +41,13 @@
                             <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0.7" />
                         </linearGradient>
                     </defs>
-                    <!-- Full sine wave circles -->
-                    <circle class="sine-wave-path wave1" cx="200" cy="200" r="160" 
-                            fill="none" stroke="url(#waveGradient1)" stroke-width="3" />
-                    <circle class="sine-wave-path wave2" cx="200" cy="200" r="170" 
-                            fill="none" stroke="url(#waveGradient2)" stroke-width="2.5" />
+                    <!-- Sine wave paths that oscillate around a circular path -->
+                    <path class="sine-wave-path wave1" 
+                          d="M 200,40 C 215,35 230,40 245,45 C 260,50 275,60 290,72 C 305,84 318,98 329,113 C 340,128 348,145 353,162 C 358,179 360,197 360,215 C 360,233 358,251 353,268 C 348,285 340,302 329,317 C 318,332 305,346 290,358 C 275,370 260,380 245,385 C 230,390 215,395 200,390 C 185,385 170,380 155,375 C 140,370 125,360 110,348 C 95,336 82,322 71,307 C 60,292 52,275 47,258 C 42,241 40,223 40,205 C 40,187 42,169 47,152 C 52,135 60,118 71,103 C 82,88 95,74 110,62 C 125,50 140,40 155,35 C 170,30 185,35 200,40 Z" 
+                          fill="none" stroke="url(#waveGradient1)" stroke-width="3" />
+                    <path class="sine-wave-path wave2" 
+                          d="M 200,30 C 218,28 235,33 252,40 C 269,47 285,58 300,72 C 315,86 328,102 338,120 C 348,138 355,158 359,178 C 363,198 363,219 360,239 C 357,259 350,279 340,297 C 330,315 317,331 302,345 C 287,359 270,370 252,378 C 235,386 218,391 200,390 C 182,389 165,384 148,376 C 131,368 115,357 100,343 C 85,329 72,313 62,295 C 52,277 45,257 41,237 C 37,217 37,196 40,176 C 43,156 50,136 60,118 C 70,100 83,84 98,70 C 113,56 130,45 148,37 C 165,29 182,24 200,30 Z" 
+                          fill="none" stroke="url(#waveGradient2)" stroke-width="2.5" />
                 </svg>
                 <div>
                     <img src="images/profile.jpg" alt="Artist Profile Photo" id="profile-img">

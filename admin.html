@@ -167,6 +167,67 @@
         .small-input {
             width: 100px !important;
         }
+
+        .reorder-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .reorder-btn {
+            padding: 0.5rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .reorder-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .reorder-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .delete-btn {
+            padding: 0.5rem 1rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        .upload-section {
+            margin-top: 0.5rem;
+            padding: 1rem;
+            background: #f0f9ff;
+            border-radius: 8px;
+            border: 2px dashed var(--primary-color);
+        }
+
+        .upload-section input[type="file"] {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 0.5rem;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body>
@@ -180,9 +241,6 @@
                 </li>
                 <li class="nav-item">
                     <a href="commissions.html" class="nav-link">Commissions</a>
-                </li>
-                <li class="nav-item">
-                    <a href="admin.html" class="nav-link active">Admin</a>
                 </li>
             </ul>
         </div>
@@ -264,6 +322,9 @@
             <h2>Gallery Items</h2>
             <div id="gallery-items-container">
                 <!-- Gallery items will be dynamically added here -->
+            </div>
+            <div style="margin-top: 1rem;">
+                <button onclick="addNewGalleryItem()" class="btn" style="width: auto; padding: 0.75rem 2rem;">+ Add New Gallery Item</button>
             </div>
         </div>
 
