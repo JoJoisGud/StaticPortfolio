@@ -132,16 +132,18 @@ function generateTriangularMosaic() {
     
     // Calculate grid dimensions based on viewport
     const triangleSize = 80;
+    // Height factor for equilateral triangles (√3/2 ≈ 0.866)
+    const EQUILATERAL_TRIANGLE_HEIGHT_FACTOR = Math.sqrt(3) / 2;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     const cols = Math.ceil(viewportWidth / triangleSize) + 1;
-    const rows = Math.ceil(viewportHeight / (triangleSize * 0.866)) + 1; // 0.866 is height factor for equilateral triangles
+    const rows = Math.ceil(viewportHeight / (triangleSize * EQUILATERAL_TRIANGLE_HEIGHT_FACTOR)) + 1;
     
     // Generate triangular grid
     for (let row = 0; row < rows; row++) {
         for (let col = 0; col < cols; col++) {
             const x = col * triangleSize;
-            const y = row * (triangleSize * 0.866);
+            const y = row * (triangleSize * EQUILATERAL_TRIANGLE_HEIGHT_FACTOR);
             
             // Determine if this is an upward or downward triangle
             const isUpward = (row + col) % 2 === 0;
@@ -152,9 +154,9 @@ function generateTriangularMosaic() {
             if (isUpward) {
                 // Upward pointing triangle
                 const points = `
-                    ${x},${y + triangleSize * 0.866} 
+                    ${x},${y + triangleSize * EQUILATERAL_TRIANGLE_HEIGHT_FACTOR} 
                     ${x + triangleSize / 2},${y} 
-                    ${x + triangleSize},${y + triangleSize * 0.866}
+                    ${x + triangleSize},${y + triangleSize * EQUILATERAL_TRIANGLE_HEIGHT_FACTOR}
                 `;
                 polygon.setAttribute('points', points.trim());
             } else {
@@ -162,7 +164,7 @@ function generateTriangularMosaic() {
                 const points = `
                     ${x},${y} 
                     ${x + triangleSize},${y} 
-                    ${x + triangleSize / 2},${y + triangleSize * 0.866}
+                    ${x + triangleSize / 2},${y + triangleSize * EQUILATERAL_TRIANGLE_HEIGHT_FACTOR}
                 `;
                 polygon.setAttribute('points', points.trim());
             }
@@ -189,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let resizeTimeout;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(generateTriangularMosaic, 250);
+        resizeTimeout = setTimeout(generateTriangularMosaic, 500);
     });
     
     // Check and show admin link if logged in
