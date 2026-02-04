@@ -184,17 +184,8 @@ function generateTriangularMosaic() {
 
 // Generate dynamic mosaic background from art pieces
 document.addEventListener('DOMContentLoaded', function() {
-    // Blur value for mosaic background
-    const MOSAIC_BLUR = 'blur(60px)';
-    
     // Generate triangular mosaic background
     generateTriangularMosaic();
-    
-    // Apply blur filter to mosaic
-    const mosaicBackground = document.querySelector('.background-mosaic');
-    if (mosaicBackground) {
-        mosaicBackground.style.filter = MOSAIC_BLUR;
-    }
     
     // Regenerate mosaic on window resize for responsiveness
     let resizeTimeout;
@@ -202,10 +193,6 @@ document.addEventListener('DOMContentLoaded', function() {
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => {
             generateTriangularMosaic();
-            const mosaic = document.querySelector('.background-mosaic');
-            if (mosaic) {
-                mosaic.style.filter = MOSAIC_BLUR;
-            }
         }, 500);
     });
     
