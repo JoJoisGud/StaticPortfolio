@@ -9,6 +9,14 @@ const SESSION_KEY = 'portfolio_admin_session';
 const CONTENT_KEY = 'portfolio_content';
 const PASSWORD_HASH_KEY = 'portfolio_password_hash';
 
+// Constants for image upload and gallery management
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB max file size
+const DEFAULT_GALLERY_ITEM = {
+    image: 'images/art1.jpg',
+    title: 'New Piece',
+    category: 'Digital Art'
+};
+
 // Default password hash (for 'admin123')
 // This hash was generated using PBKDF2 with 100,000 iterations
 // To change password: Use the setNewPassword() function in browser console
@@ -275,12 +283,13 @@ function renderGalleryItems(items) {
     items.forEach((item, index) => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'gallery-item-edit';
+        const uploadId = `gallery-upload-${index}`;
         itemDiv.innerHTML = `
             <img src="${escapeAttribute(item.image)}" alt="${escapeAttribute(item.title)}" id="gallery-preview-${index}">
             <div class="item-fields">
                 <div class="upload-section">
-                    <label><strong>Upload New Image:</strong></label>
-                    <input type="file" accept="image/*" onchange="handleImageUpload(event, ${index})" data-gallery-index="${index}">
+                    <label for="${uploadId}"><strong>Upload New Image:</strong></label>
+                    <input type="file" id="${uploadId}" accept="image/*" onchange="handleImageUpload(event, ${index})" data-gallery-index="${index}">
                     <small style="color: #6b7280;">Or enter an image URL below</small>
                 </div>
                 <div class="form-group" style="margin-bottom: 0.5rem; margin-top: 0.5rem;">
@@ -311,8 +320,8 @@ function handleImageUpload(event, index) {
     const file = event.target.files[0];
     if (!file) return;
     
-    // Check file size (limit to 5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    // Check file size limit
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
         alert('Image size must be less than 5MB');
         return;
     }
@@ -376,11 +385,7 @@ function addNewGalleryItem() {
     const savedContent = localStorage.getItem(CONTENT_KEY);
     const content = savedContent ? JSON.parse(savedContent) : defaultContent;
     
-    content.galleryItems.push({
-        image: 'images/art1.jpg',
-        title: 'New Piece',
-        category: 'Digital Art'
-    });
+    content.galleryItems.push({ ...DEFAULT_GALLERY_ITEM });
     
     // Save and re-render
     localStorage.setItem(CONTENT_KEY, JSON.stringify(content));
