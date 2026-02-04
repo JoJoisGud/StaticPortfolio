@@ -96,6 +96,28 @@ function applyContent(content) {
     }
 }
 
+// Initialize mobile navigation toggle
+function initMobileNav() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            navToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        
+        // Close menu when clicking on a link
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    }
+}
+
 // Generate triangular mosaic background
 function generateTriangularMosaic() {
     const mosaicBackground = document.querySelector('.background-mosaic');
@@ -128,28 +150,6 @@ function generateTriangularMosaic() {
         const b = Math.max(0, Math.min(255, baseColor.b + (Math.random() * variance * 2 - variance)));
         const opacity = 0.15 + Math.random() * 0.1;
         return `rgba(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)}, ${opacity})`;
-    }
-    
-    // Initialize mobile navigation toggle
-    function initMobileNav() {
-        const navToggle = document.querySelector('.nav-toggle');
-        const navMenu = document.querySelector('.nav-menu');
-        
-        if (navToggle && navMenu) {
-            navToggle.addEventListener('click', function() {
-                navToggle.classList.toggle('active');
-                navMenu.classList.toggle('active');
-            });
-            
-            // Close menu when clicking on a link
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    navToggle.classList.remove('active');
-                    navMenu.classList.remove('active');
-                });
-            });
-        }
     }
     
     // Store original colors for light sweep effect
