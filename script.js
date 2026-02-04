@@ -96,8 +96,102 @@ function applyContent(content) {
     }
 }
 
+// Generate triangular mosaic background
+function generateTriangularMosaic() {
+    const mosaicBackground = document.querySelector('.background-mosaic');
+    if (!mosaicBackground) return;
+    
+    // Clear existing content
+    mosaicBackground.innerHTML = '';
+    
+    // Create SVG element
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '100%');
+    svg.setAttribute('height', '100%');
+    svg.style.position = 'absolute';
+    svg.style.top = '0';
+    svg.style.left = '0';
+    
+    // Base colors for the mosaic - shades of purple/blue
+    const baseColors = [
+        { r: 99, g: 102, b: 241 },   // #6366f1
+        { r: 139, g: 92, b: 246 },   // #8b5cf6
+        { r: 102, g: 126, b: 234 },  // #667eea
+        { r: 118, g: 75, b: 162 },   // #764ba2
+    ];
+    
+    // Function to generate a color variant
+    function getColorVariant(baseColor) {
+        const variance = 30;
+        const r = Math.max(0, Math.min(255, baseColor.r + (Math.random() * variance * 2 - variance)));
+        const g = Math.max(0, Math.min(255, baseColor.g + (Math.random() * variance * 2 - variance)));
+        const b = Math.max(0, Math.min(255, baseColor.b + (Math.random() * variance * 2 - variance)));
+        const opacity = 0.15 + Math.random() * 0.1;
+        return `rgba(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)}, ${opacity})`;
+    }
+    
+    // Calculate grid dimensions based on viewport
+    const triangleSize = 80;
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const cols = Math.ceil(viewportWidth / triangleSize) + 1;
+    const rows = Math.ceil(viewportHeight / (triangleSize * 0.866)) + 1; // 0.866 is height factor for equilateral triangles
+    
+    // Generate triangular grid
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            const x = col * triangleSize;
+            const y = row * (triangleSize * 0.866);
+            
+            // Determine if this is an upward or downward triangle
+            const isUpward = (row + col) % 2 === 0;
+            
+            // Create triangle polygon
+            const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+            
+            if (isUpward) {
+                // Upward pointing triangle
+                const points = `
+                    ${x},${y + triangleSize * 0.866} 
+                    ${x + triangleSize / 2},${y} 
+                    ${x + triangleSize},${y + triangleSize * 0.866}
+                `;
+                polygon.setAttribute('points', points.trim());
+            } else {
+                // Downward pointing triangle
+                const points = `
+                    ${x},${y} 
+                    ${x + triangleSize},${y} 
+                    ${x + triangleSize / 2},${y + triangleSize * 0.866}
+                `;
+                polygon.setAttribute('points', points.trim());
+            }
+            
+            // Assign a random color variant
+            const baseColor = baseColors[Math.floor(Math.random() * baseColors.length)];
+            polygon.setAttribute('fill', getColorVariant(baseColor));
+            polygon.setAttribute('stroke', 'rgba(255, 255, 255, 0.05)');
+            polygon.setAttribute('stroke-width', '0.5');
+            
+            svg.appendChild(polygon);
+        }
+    }
+    
+    mosaicBackground.appendChild(svg);
+}
+
 // Generate dynamic mosaic background from art pieces
 document.addEventListener('DOMContentLoaded', function() {
+    // Generate triangular mosaic background
+    generateTriangularMosaic();
+    
+    // Regenerate mosaic on window resize for responsiveness
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(generateTriangularMosaic, 250);
+    });
+    
     // Check and show admin link if logged in
     checkAndShowAdminLink();
     
@@ -105,32 +199,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const content = loadPortfolioContent();
     if (content) {
         applyContent(content);
-    }
-    
-    const mosaicBackground = document.querySelector('.background-mosaic');
-    
-    if (mosaicBackground) {
-        // Art pieces for mosaic background
-        let artPieces = [
-            'images/art1.jpg',
-            'images/art2.jpg',
-            'images/art3.jpg',
-            'images/art4.jpg',
-            'images/art5.jpg',
-            'images/art6.jpg'
-        ];
-        
-        // Use custom images if available
-        if (content && content.galleryItems) {
-            artPieces = content.galleryItems.map(item => item.image);
-        }
-        
-        // Create mosaic grid
-        const mosaicHtml = artPieces.map(src => 
-            `<div class="mosaic-tile" style="background-image: url('${src}')"></div>`
-        ).join('');
-        
-        mosaicBackground.innerHTML = `<div class="mosaic-grid">${mosaicHtml}</div>`;
     }
     
     // Smooth scrolling for internal links
@@ -178,33 +246,3 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(card);
     });
 });
-
-// Add mosaic grid styles dynamically
-const style = document.createElement('style');
-style.textContent = `
-    .mosaic-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-        width: 100%;
-        height: 100%;
-        gap: 10px;
-        padding: 20px;
-        filter: blur(15px);
-        opacity: 0.3;
-    }
-    
-    .mosaic-tile {
-        background-size: cover;
-        background-position: center;
-        border-radius: 8px;
-    }
-    
-    @media (max-width: 768px) {
-        .mosaic-grid {
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-        }
-    }
-`;
-document.head.appendChild(style);
