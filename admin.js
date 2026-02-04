@@ -243,6 +243,9 @@ function loadContent() {
     document.getElementById('artist-tagline').value = content.artistTagline;
     document.getElementById('profile-image').value = content.profileImage;
     
+    // Update profile image preview
+    updateProfileImagePreview();
+    
     // Load about section
     document.getElementById('about-paragraph-1').value = content.aboutParagraph1;
     document.getElementById('about-paragraph-2').value = content.aboutParagraph2;
@@ -338,6 +341,41 @@ function handleImageUpload(event, index) {
         }
     };
     reader.readAsDataURL(file);
+}
+
+// Handle profile image upload
+function handleProfileImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Check file size limit
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+        alert('Image size must be less than 5MB');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imageData = e.target.result;
+        
+        // Update the profile image URL input field
+        const profileImageInput = document.getElementById('profile-image');
+        if (profileImageInput) {
+            profileImageInput.value = imageData;
+            updateProfileImagePreview();
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// Update profile image preview
+function updateProfileImagePreview() {
+    const profileImageInput = document.getElementById('profile-image');
+    const preview = document.getElementById('profile-image-preview');
+    if (profileImageInput && preview && profileImageInput.value) {
+        preview.src = profileImageInput.value;
+        preview.style.display = 'block';
+    }
 }
 
 // Update image preview

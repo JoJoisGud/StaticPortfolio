@@ -124,8 +124,8 @@ body {
     position: relative;
 }
 
-/* SVG Sine Wave Circle */
-.sine-wave-circle {
+/* SVG Bubble Animation */
+.bubble-animation {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -133,20 +133,22 @@ body {
     height: 400px;
     transform: translate(-50%, -50%);
     z-index: 0;
-    animation: rotateSineWave 10s linear infinite;
-    filter: drop-shadow(0 0 10px rgba(99, 102, 241, 0.3));
 }
 
-.sine-wave-path {
-    /* Solid lines for full sine wave circles */
+.bubble-circle {
+    transform-origin: center;
 }
 
-.wave1 {
-    animation: pulsateWave1 3s ease-in-out infinite;
+.bubble1 {
+    animation: wobble1 6s ease-in-out infinite, float1 8s ease-in-out infinite;
 }
 
-.wave2 {
-    animation: pulsateWave2 4s ease-in-out infinite;
+.bubble2 {
+    animation: wobble2 7s ease-in-out infinite, float2 9s ease-in-out infinite;
+}
+
+.bubble3 {
+    animation: wobble3 5s ease-in-out infinite, float3 7s ease-in-out infinite;
 }
 
 /* Inner circle with border */
@@ -174,36 +176,77 @@ body {
     transform: scale(1.05);
 }
 
-/* Rotation animation for sine wave */
-@keyframes rotateSineWave {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-
-/* Pulsate animations for wave circles */
-@keyframes pulsateWave1 {
+/* Wobble animations for bubbles - constantly changing organic movement */
+@keyframes wobble1 {
     0%, 100% {
-        stroke-width: 3;
-        opacity: 0.9;
+        transform: scale(1, 1) translate(0, 0);
+    }
+    25% {
+        transform: scale(1.05, 0.95) translate(5px, -3px);
     }
     50% {
-        stroke-width: 4;
-        opacity: 1;
+        transform: scale(0.98, 1.08) translate(-3px, 5px);
+    }
+    75% {
+        transform: scale(1.03, 0.97) translate(-4px, -2px);
     }
 }
 
-@keyframes pulsateWave2 {
+@keyframes wobble2 {
     0%, 100% {
-        stroke-width: 2.5;
+        transform: scale(1, 1) translate(0, 0);
+    }
+    30% {
+        transform: scale(0.97, 1.06) translate(-5px, 4px);
+    }
+    60% {
+        transform: scale(1.04, 0.96) translate(4px, -5px);
+    }
+    85% {
+        transform: scale(0.99, 1.02) translate(3px, 2px);
+    }
+}
+
+@keyframes wobble3 {
+    0%, 100% {
+        transform: scale(1, 1) translate(0, 0);
+    }
+    20% {
+        transform: scale(1.02, 0.98) translate(4px, 3px);
+    }
+    45% {
+        transform: scale(0.96, 1.05) translate(-4px, -4px);
+    }
+    70% {
+        transform: scale(1.05, 0.95) translate(2px, -3px);
+    }
+}
+
+/* Float animations for additional organic movement */
+@keyframes float1 {
+    0%, 100% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+@keyframes float2 {
+    0%, 100% {
+        opacity: 0.5;
+    }
+    50% {
         opacity: 0.7;
     }
+}
+
+@keyframes float3 {
+    0%, 100% {
+        opacity: 0.4;
+    }
     50% {
-        stroke-width: 3.5;
-        opacity: 0.9;
+        opacity: 0.6;
     }
 }
 

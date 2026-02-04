@@ -293,9 +293,15 @@
                 <label for="artist-tagline">Tagline</label>
                 <input type="text" id="artist-tagline" placeholder="Visual & Digital Artist">
             </div>
+            <div class="upload-section">
+                <label for="profile-image-upload"><strong>Upload Profile Picture:</strong></label>
+                <input type="file" id="profile-image-upload" accept="image/*" onchange="handleProfileImageUpload(event)">
+                <small style="color: #6b7280;">Or enter an image URL below</small>
+                <img id="profile-image-preview" class="upload-preview" style="display: none; margin-top: 1rem;">
+            </div>
             <div class="form-group">
                 <label for="profile-image">Profile Image URL</label>
-                <input type="text" id="profile-image" placeholder="images/profile.jpg">
+                <input type="text" id="profile-image" placeholder="images/profile.jpg" onchange="updateProfileImagePreview()">
             </div>
         </div>
 
