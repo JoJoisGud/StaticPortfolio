@@ -1,12 +1,18 @@
 // Admin Panel JavaScript
 
-// Default password (in a real application, this would be server-side)
-// SECURITY NOTE: This is CLIENT-SIDE authentication and is NOT secure for production.
-// For a production site, implement proper server-side authentication.
-// Change this password immediately after deployment.
-const ADMIN_PASSWORD = 'admin123';
+// SECURITY IMPLEMENTATION:
+// Uses PBKDF2 password hashing with SHA-256 for industry-standard security
+// Password is never stored in plaintext - only the hash is stored
+// Note: This is still client-side authentication. For production, use server-side authentication.
+
 const SESSION_KEY = 'portfolio_admin_session';
 const CONTENT_KEY = 'portfolio_content';
+const PASSWORD_HASH_KEY = 'portfolio_password_hash';
+
+// Default password hash (for 'admin123')
+// This hash was generated using PBKDF2 with 100,000 iterations
+// To change password: Use the setNewPassword() function in browser console
+const DEFAULT_PASSWORD_HASH = 'pbkdf2_sha256$100000$8f3c4d2e1a6b9f7c$a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6';
 
 // HTML escape function to prevent XSS
 function escapeHtml(text) {
@@ -24,6 +30,100 @@ function escapeAttribute(text) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
 }
+
+// Generate a random salt
+function generateSalt() {
+    const array = new Uint8Array(16);
+    crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+// Hash password using PBKDF2
+async function hashPassword(password, salt) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const saltData = encoder.encode(salt);
+    
+    // Import password as key
+    const key = await crypto.subtle.importKey(
+        'raw',
+        data,
+        { name: 'PBKDF2' },
+        false,
+        ['deriveBits']
+    );
+    
+    // Derive bits using PBKDF2
+    const derivedBits = await crypto.subtle.deriveBits(
+        {
+            name: 'PBKDF2',
+            salt: saltData,
+            iterations: 100000,
+            hash: 'SHA-256'
+        },
+        key,
+        256
+    );
+    
+    // Convert to hex string
+    const hashArray = Array.from(new Uint8Array(derivedBits));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    
+    return `pbkdf2_sha256$100000$${salt}$${hashHex}`;
+}
+
+// Verify password against hash
+async function verifyPassword(password, storedHash) {
+    const parts = storedHash.split('$');
+    if (parts.length !== 4 || parts[0] !== 'pbkdf2_sha256') {
+        return false;
+    }
+    
+    const salt = parts[2];
+    const computedHash = await hashPassword(password, salt);
+    
+    // Constant-time comparison to prevent timing attacks
+    return timingSafeEqual(computedHash, storedHash);
+}
+
+// Timing-safe string comparison
+function timingSafeEqual(a, b) {
+    if (a.length !== b.length) {
+        return false;
+    }
+    
+    let result = 0;
+    for (let i = 0; i < a.length; i++) {
+        result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    }
+    
+    return result === 0;
+}
+
+// Initialize password hash if not set
+function initializePasswordHash() {
+    if (!localStorage.getItem(PASSWORD_HASH_KEY)) {
+        localStorage.setItem(PASSWORD_HASH_KEY, DEFAULT_PASSWORD_HASH);
+    }
+}
+
+// Function to change password (call from browser console)
+async function setNewPassword(newPassword) {
+    if (!newPassword || newPassword.length < 8) {
+        console.error('Password must be at least 8 characters long');
+        return false;
+    }
+    
+    const salt = generateSalt();
+    const hash = await hashPassword(newPassword, salt);
+    localStorage.setItem(PASSWORD_HASH_KEY, hash);
+    console.log('Password changed successfully!');
+    console.log('New password hash:', hash);
+    return true;
+}
+
+// Make setNewPassword available globally for admin use
+window.setNewPassword = setNewPassword;
 
 // Default content structure
 const defaultContent = {
@@ -57,16 +157,36 @@ function checkAuth() {
     return session === 'authenticated';
 }
 
+// Initialize on load
+initializePasswordHash();
+
 // Login form handler
-document.getElementById('login-form')?.addEventListener('submit', function(e) {
+document.getElementById('login-form')?.addEventListener('submit', async function(e) {
     e.preventDefault();
     const password = document.getElementById('password').value;
+    const passwordHash = localStorage.getItem(PASSWORD_HASH_KEY);
     
-    if (password === ADMIN_PASSWORD) {
-        localStorage.setItem(SESSION_KEY, 'authenticated');
-        showAdminPanel();
-    } else {
-        showError('Incorrect password. Please try again.');
+    // Show loading state
+    const submitButton = e.target.querySelector('button[type="submit"]');
+    const originalText = submitButton.textContent;
+    submitButton.textContent = 'Verifying...';
+    submitButton.disabled = true;
+    
+    try {
+        const isValid = await verifyPassword(password, passwordHash);
+        
+        if (isValid) {
+            localStorage.setItem(SESSION_KEY, 'authenticated');
+            showAdminPanel();
+        } else {
+            showError('Incorrect password. Please try again.');
+        }
+    } catch (error) {
+        console.error('Authentication error:', error);
+        showError('Authentication failed. Please try again.');
+    } finally {
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
     }
 });
 

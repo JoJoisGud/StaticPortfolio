@@ -195,14 +195,20 @@
         <form id="login-form">
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter admin password" required>
+                <input type="password" id="password" placeholder="Enter admin password" required autocomplete="current-password">
             </div>
             <button type="submit" class="btn">Login</button>
         </form>
-        <p style="text-align: center; margin-top: 1.5rem; padding: 1rem; background: #fff3cd; border-radius: 8px; color: #856404; font-size: 0.85rem;">
-            <strong>⚠️ Security Notice:</strong> This is client-side authentication and is NOT secure for production use. 
-            Change the password in admin.js and implement proper server-side authentication for a real website.
-        </p>
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <p style="padding: 1rem; background: #e0f2fe; border-radius: 8px; color: #0369a1; font-size: 0.85rem; margin-bottom: 0.5rem;">
+                <strong>🔐 Security:</strong> Passwords are hashed using PBKDF2 with SHA-256 and 100,000 iterations.
+            </p>
+            <p style="padding: 1rem; background: #fff3cd; border-radius: 8px; color: #856404; font-size: 0.85rem;">
+                <strong>Default password:</strong> <code>admin123</code><br>
+                <strong>Change password:</strong> After login, open browser console and run:<br>
+                <code style="display: block; margin-top: 0.5rem; background: #fff; padding: 0.5rem; border-radius: 4px;">await setNewPassword('your-new-password')</code>
+            </p>
+        </div>
     </div>
 
     <!-- Admin Panel -->

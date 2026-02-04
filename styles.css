@@ -138,17 +138,15 @@ body {
 }
 
 .sine-wave-path {
-    stroke-dasharray: 10 5;
-    animation: dashAnimation 3s linear infinite;
+    /* Solid lines for full sine wave circles */
 }
 
 .wave1 {
-    animation-duration: 3s;
+    animation: pulsateWave1 3s ease-in-out infinite;
 }
 
 .wave2 {
-    animation-duration: 4s;
-    animation-direction: reverse;
+    animation: pulsateWave2 4s ease-in-out infinite;
 }
 
 /* Inner circle with border */
@@ -186,13 +184,26 @@ body {
     }
 }
 
-/* Dash animation for sine wave effect */
-@keyframes dashAnimation {
-    0% {
-        stroke-dashoffset: 0;
+/* Pulsate animations for wave circles */
+@keyframes pulsateWave1 {
+    0%, 100% {
+        stroke-width: 3;
+        opacity: 0.9;
     }
-    100% {
-        stroke-dashoffset: -30;
+    50% {
+        stroke-width: 4;
+        opacity: 1;
+    }
+}
+
+@keyframes pulsateWave2 {
+    0%, 100% {
+        stroke-width: 2.5;
+        opacity: 0.7;
+    }
+    50% {
+        stroke-width: 3.5;
+        opacity: 0.9;
     }
 }
 

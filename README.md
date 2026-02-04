@@ -48,8 +48,29 @@ StaticPortfolio/
 
 ## Usage
 
-### Viewing the Site
-Simply open `index.html` in a web browser, or serve the directory with any web server:
+### GitHub Pages Deployment
+
+This portfolio is ready to be deployed on GitHub Pages:
+
+1. **Enable GitHub Pages**:
+   - Go to your repository Settings → Pages
+   - Under "Source", select the branch you want to deploy (e.g., `main` or `copilot/create-artist-portfolio-page`)
+   - Select "/ (root)" as the folder
+   - Click Save
+
+2. **Access Your Site**:
+   - Your portfolio will be available at: `https://[username].github.io/[repository-name]/`
+   - For example: `https://JoJoisGud.github.io/StaticPortfolio/`
+
+3. **Custom Domain (Optional)**:
+   - You can add a custom domain in the GitHub Pages settings
+   - Follow GitHub's instructions for DNS configuration
+
+**Note**: The `.nojekyll` file ensures GitHub Pages serves all files correctly without Jekyll processing.
+
+### Local Development
+
+You can also run the site locally for testing:
 
 ```bash
 # Using Python
@@ -71,7 +92,10 @@ The easiest way to customize your portfolio is through the admin panel:
 
 1. Navigate to `admin.html` in your browser
 2. Login with the default password (found in `admin.js`)
-3. **IMPORTANT**: Immediately change the password by editing `ADMIN_PASSWORD` in `admin.js`
+3. **IMPORTANT**: Change the default password immediately:
+   - After logging in, open your browser's developer console (F12)
+   - Run: `await setNewPassword('your-secure-password')`
+   - Use a strong password (at least 8 characters)
 4. Edit any content directly in the admin interface:
    - Artist name and tagline
    - About section text
@@ -81,9 +105,15 @@ The easiest way to customize your portfolio is through the admin panel:
 5. Click "Save All Changes" to apply updates
 6. Changes will immediately appear on the main pages
 
-**Security Warning**: The admin panel uses client-side authentication which is NOT secure for production. Anyone with access to the source code can view the password. For a production website, implement proper server-side authentication with a backend. This admin panel is designed for simple personal portfolios or local use only.
+**Password Security**: 
+- Passwords are hashed using PBKDF2 with SHA-256 and 100,000 iterations
+- Industry-standard password hashing protects against rainbow table attacks
+- Timing-safe comparison prevents timing attacks
+- Password is never stored in plaintext
 
-**Note**: Changes are stored in your browser's localStorage. Clearing browser data will reset all customizations.
+**Security Note**: While password hashing is implemented, this is still client-side authentication. For production websites handling sensitive data, implement proper server-side authentication with a backend. This admin panel is designed for personal portfolios or local use.
+
+**Note**: Changes are stored in your browser's localStorage. Clearing browser data will reset all customizations and password.
 
 #### Manual Customization
 
