@@ -96,6 +96,28 @@ function applyContent(content) {
     }
 }
 
+// Initialize mobile navigation toggle
+function initMobileNav() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    if (navToggle && navMenu) {
+        navToggle.addEventListener('click', function() {
+            navToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        
+        // Close menu when clicking on a link
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                navToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    }
+}
+
 // Generate triangular mosaic background
 function generateTriangularMosaic() {
     const mosaicBackground = document.querySelector('.background-mosaic');
@@ -272,6 +294,9 @@ function animateLightSweep(mosaicData, maxDiagonal) {
 
 // Generate dynamic mosaic background from art pieces
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize mobile navigation toggle
+    initMobileNav();
+    
     // Generate triangular mosaic background
     generateTriangularMosaic();
     
