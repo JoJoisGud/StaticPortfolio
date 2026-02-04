@@ -130,8 +130,13 @@ function generateTriangularMosaic() {
         return `rgba(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)}, ${opacity})`;
     }
     
+    // Store original colors for light sweep effect
+    const mosaicData = [];
+    
     // Calculate grid dimensions based on viewport
-    const triangleSize = 80;
+    // Adjust triangle size based on viewport width for better mobile experience
+    const isMobile = window.innerWidth <= 768;
+    const triangleSize = isMobile ? 40 : 80; // Smaller on mobile for better visibility
     // Height factor for equilateral triangles (√3/2 ≈ 0.866)
     const EQUILATERAL_TRIANGLE_HEIGHT_FACTOR = Math.sqrt(3) / 2;
     const viewportWidth = window.innerWidth;
@@ -171,15 +176,98 @@ function generateTriangularMosaic() {
             
             // Assign a random color variant
             const baseColor = baseColors[Math.floor(Math.random() * baseColors.length)];
-            polygon.setAttribute('fill', getColorVariant(baseColor));
+            const colorVariant = getColorVariant(baseColor);
+            polygon.setAttribute('fill', colorVariant);
             polygon.setAttribute('stroke', 'rgba(255, 255, 255, 0.05)');
             polygon.setAttribute('stroke-width', '0.5');
+            
+            // Parse and store color components for efficient light sweep
+            const rgba = colorVariant.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),\s*([\d.]+)\)/);
+            const colorData = rgba ? {
+                r: parseInt(rgba[1]),
+                g: parseInt(rgba[2]),
+                b: parseInt(rgba[3]),
+                a: parseFloat(rgba[4])
+            } : { r: 0, g: 0, b: 0, a: 0 };
+            
+            // Store polygon with its data for light sweep effect
+            mosaicData.push({
+                polygon: polygon,
+                baseColor: baseColor,
+                originalColor: colorVariant,
+                colorData: colorData,
+                diagonal: row + col // Diagonal index for wave effect
+            });
             
             svg.appendChild(polygon);
         }
     }
     
     mosaicBackground.appendChild(svg);
+    
+    // Implement light bar sweep effect
+    animateLightSweep(mosaicData, rows + cols);
+}
+
+// Animate light sweep across mosaic with tailing effect
+function animateLightSweep(mosaicData, maxDiagonal) {
+    if (!mosaicData || mosaicData.length === 0) return;
+    
+    let sweepPosition = 0;
+    const sweepWidth = 8; // Number of diagonals affected by the light
+    const tailLength = 5; // Length of the tailing effect
+    let animationId = null;
+    let lastTime = 0;
+    const sweepSpeed = 80; // Milliseconds between frames
+    
+    function sweep(currentTime) {
+        // Throttle to sweepSpeed ms between updates
+        if (currentTime - lastTime < sweepSpeed) {
+            animationId = requestAnimationFrame(sweep);
+            return;
+        }
+        lastTime = currentTime;
+        
+        mosaicData.forEach(tile => {
+            const distance = sweepPosition - tile.diagonal;
+            const { r: origR, g: origG, b: origB, a: origA } = tile.colorData;
+            
+            if (distance >= 0 && distance < sweepWidth) {
+                // Main light bar with high brightness
+                const intensity = 1 - (distance / sweepWidth);
+                const brightnessFactor = 1 + (intensity * 0.8); // Up to 80% brighter
+                
+                const r = Math.min(255, Math.floor(origR * brightnessFactor));
+                const g = Math.min(255, Math.floor(origG * brightnessFactor));
+                const b = Math.min(255, Math.floor(origB * brightnessFactor));
+                const a = Math.min(1, origA * (1 + intensity * 0.5));
+                tile.polygon.setAttribute('fill', `rgba(${r}, ${g}, ${b}, ${a})`);
+            } else if (distance >= sweepWidth && distance < sweepWidth + tailLength) {
+                // Tailing effect - gradual fade back to original
+                const tailDistance = distance - sweepWidth;
+                const tailIntensity = 1 - (tailDistance / tailLength);
+                
+                const baseBrightness = 1 + (tailIntensity * 0.4);
+                const r = Math.min(255, Math.floor(origR * baseBrightness));
+                const g = Math.min(255, Math.floor(origG * baseBrightness));
+                const b = Math.min(255, Math.floor(origB * baseBrightness));
+                const a = Math.min(1, origA * (1 + tailIntensity * 0.3));
+                tile.polygon.setAttribute('fill', `rgba(${r}, ${g}, ${b}, ${a})`);
+            } else {
+                // Reset to original color
+                tile.polygon.setAttribute('fill', tile.originalColor);
+            }
+        });
+        
+        sweepPosition++;
+        if (sweepPosition > maxDiagonal + sweepWidth + tailLength) {
+            sweepPosition = 0;
+        }
+        
+        animationId = requestAnimationFrame(sweep);
+    }
+    
+    animationId = requestAnimationFrame(sweep);
 }
 
 // Generate dynamic mosaic background from art pieces

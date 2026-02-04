@@ -90,7 +90,7 @@ body {
     overflow: hidden;
 }
 
-/* Diagonal Shimmer Effect */
+/* Diagonal Shimmer Effect - Disabled in favor of mosaic light sweep */
 .shimmer-overlay {
     position: absolute;
     top: 0;
@@ -100,6 +100,7 @@ body {
     z-index: 0;
     pointer-events: none;
     overflow: hidden;
+    display: none; /* Disabled - replaced with diagonal mosaic light sweep */
 }
 
 .shimmer-overlay::before {
@@ -207,19 +208,19 @@ body {
     transform: scale(1.05);
 }
 
-/* Wobble animations for bubbles - constantly changing organic movement */
+/* Wobble animations for bubbles - constantly changing organic movement with 30% amplitude increase */
 @keyframes wobble1 {
     0%, 100% {
         transform: scale(1, 1) translate(0, 0);
     }
     25% {
-        transform: scale(1.05, 0.95) translate(5px, -3px);
+        transform: scale(1.065, 0.935) translate(6.5px, -3.9px);
     }
     50% {
-        transform: scale(0.98, 1.08) translate(-3px, 5px);
+        transform: scale(0.974, 1.104) translate(-3.9px, 6.5px);
     }
     75% {
-        transform: scale(1.03, 0.97) translate(-4px, -2px);
+        transform: scale(1.039, 0.961) translate(-5.2px, -2.6px);
     }
 }
 
@@ -228,13 +229,13 @@ body {
         transform: scale(1, 1) translate(0, 0);
     }
     30% {
-        transform: scale(0.97, 1.06) translate(-5px, 4px);
+        transform: scale(0.961, 1.078) translate(-6.5px, 5.2px);
     }
     60% {
-        transform: scale(1.04, 0.96) translate(4px, -5px);
+        transform: scale(1.052, 0.948) translate(5.2px, -6.5px);
     }
     85% {
-        transform: scale(0.99, 1.02) translate(3px, 2px);
+        transform: scale(0.987, 1.026) translate(3.9px, 2.6px);
     }
 }
 
@@ -243,13 +244,13 @@ body {
         transform: scale(1, 1) translate(0, 0);
     }
     20% {
-        transform: scale(1.02, 0.98) translate(4px, 3px);
+        transform: scale(1.026, 0.974) translate(5.2px, 3.9px);
     }
     45% {
-        transform: scale(0.96, 1.05) translate(-4px, -4px);
+        transform: scale(0.948, 1.065) translate(-5.2px, -5.2px);
     }
     70% {
-        transform: scale(1.05, 0.95) translate(2px, -3px);
+        transform: scale(1.065, 0.935) translate(2.6px, -3.9px);
     }
 }
 
@@ -304,6 +305,20 @@ body {
     box-shadow: var(--shadow);
     position: relative;
     z-index: 1;
+    margin: 2rem 0;
+}
+
+.about-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: blur(20px);
+    z-index: -1;
+    opacity: 0.7;
 }
 
 .about-section h2 {
@@ -329,6 +344,20 @@ body {
     padding: 4rem 0;
     position: relative;
     z-index: 1;
+    margin: 2rem 0;
+}
+
+.links-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: blur(20px);
+    z-index: -1;
+    opacity: 0.7;
 }
 
 .links-section h2 {
@@ -378,6 +407,20 @@ body {
     padding: 5rem 0;
     position: relative;
     z-index: 1;
+    margin: 2rem 0;
+}
+
+.gallery-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: inherit;
+    filter: blur(20px);
+    z-index: -1;
+    opacity: 0.7;
 }
 
 .gallery-section h2 {
