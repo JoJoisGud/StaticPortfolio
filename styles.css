@@ -79,6 +79,38 @@ body {
     background: rgba(99, 102, 241, 0.1);
 }
 
+/* Hamburger Menu Button */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.nav-toggle span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: var(--primary-color);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.nav-toggle.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.nav-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
 /* Triangular Mosaic Background */
 .background-mosaic {
     position: absolute;
@@ -300,7 +332,7 @@ body {
 
 /* About Section */
 .about-section {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.5);
     padding: 5rem 0;
     box-shadow: var(--shadow);
     position: relative;
@@ -318,7 +350,7 @@ body {
     background: inherit;
     filter: blur(20px);
     z-index: -1;
-    opacity: 0.7;
+    opacity: 0.3;
 }
 
 .about-section h2 {
@@ -340,7 +372,7 @@ body {
 
 /* Links Section */
 .links-section {
-    background: rgba(249, 250, 251, 0.8);
+    background: transparent;
     padding: 4rem 0;
     position: relative;
     z-index: 1;
@@ -357,7 +389,7 @@ body {
     background: inherit;
     filter: blur(20px);
     z-index: -1;
-    opacity: 0.7;
+    opacity: 0;
 }
 
 .links-section h2 {
@@ -403,7 +435,7 @@ body {
 
 /* Gallery Section */
 .gallery-section {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.5);
     padding: 5rem 0;
     position: relative;
     z-index: 1;
@@ -420,7 +452,7 @@ body {
     background: inherit;
     filter: blur(20px);
     z-index: -1;
-    opacity: 0.7;
+    opacity: 0.3;
 }
 
 .gallery-section h2 {
@@ -522,7 +554,7 @@ body {
 
 .commission-status {
     padding: 3rem 0;
-    background: var(--bg-light);
+    background: transparent;
 }
 
 .status-card {
@@ -544,7 +576,7 @@ body {
 
 .commission-types {
     padding: 5rem 0;
-    background: var(--bg-white);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .commission-types h2 {
@@ -616,7 +648,7 @@ body {
 
 .process-section {
     padding: 5rem 0;
-    background: var(--bg-light);
+    background: transparent;
 }
 
 .process-section h2 {
@@ -663,7 +695,7 @@ body {
 
 .terms-section {
     padding: 5rem 0;
-    background: var(--bg-white);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .terms-section h2 {
@@ -781,9 +813,12 @@ body {
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav-container {
-        flex-direction: column;
-        gap: 1rem;
+        flex-wrap: wrap;
         padding: 1rem;
+    }
+
+    .nav-toggle {
+        display: flex;
     }
 
     .nav-menu {
@@ -791,6 +826,14 @@ body {
         gap: 0.5rem;
         width: 100%;
         text-align: center;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+    }
+
+    .nav-menu.active {
+        max-height: 500px;
+        margin-top: 1rem;
     }
 
     .nav-item {

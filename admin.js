@@ -372,10 +372,34 @@ function handleProfileImageUpload(event) {
 function updateProfileImagePreview() {
     const profileImageInput = document.getElementById('profile-image');
     const preview = document.getElementById('profile-image-preview');
+    const deleteBtn = document.getElementById('delete-profile-btn');
+    
     if (profileImageInput && preview && profileImageInput.value) {
         preview.src = profileImageInput.value;
         preview.style.display = 'block';
+        if (deleteBtn) deleteBtn.style.display = 'block';
+    } else {
+        if (preview) preview.style.display = 'none';
+        if (deleteBtn) deleteBtn.style.display = 'none';
     }
+}
+
+// Delete profile picture
+function deleteProfilePicture() {
+    if (!confirm('Are you sure you want to delete the profile picture?')) return;
+    
+    const profileImageInput = document.getElementById('profile-image');
+    const preview = document.getElementById('profile-image-preview');
+    const deleteBtn = document.getElementById('delete-profile-btn');
+    const fileInput = document.getElementById('profile-image-upload');
+    
+    // Clear the inputs
+    if (profileImageInput) profileImageInput.value = 'images/profile.jpg';
+    if (fileInput) fileInput.value = '';
+    if (preview) preview.style.display = 'none';
+    if (deleteBtn) deleteBtn.style.display = 'none';
+    
+    showSuccess('Profile picture will be reset to default when you save changes.');
 }
 
 // Update image preview
