@@ -184,13 +184,16 @@ function generateTriangularMosaic() {
 
 // Generate dynamic mosaic background from art pieces
 document.addEventListener('DOMContentLoaded', function() {
+    // Blur value for mosaic background
+    const MOSAIC_BLUR = 'blur(60px)';
+    
     // Generate triangular mosaic background
     generateTriangularMosaic();
     
     // Apply blur filter to mosaic
     const mosaicBackground = document.querySelector('.background-mosaic');
     if (mosaicBackground) {
-        mosaicBackground.style.filter = 'blur(60px)';
+        mosaicBackground.style.filter = MOSAIC_BLUR;
     }
     
     // Regenerate mosaic on window resize for responsiveness
@@ -201,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
             generateTriangularMosaic();
             const mosaic = document.querySelector('.background-mosaic');
             if (mosaic) {
-                mosaic.style.filter = 'blur(60px)';
+                mosaic.style.filter = MOSAIC_BLUR;
             }
         }, 500);
     });
@@ -235,25 +238,6 @@ document.addEventListener('DOMContentLoaded', function() {
         card.style.transform = 'translateY(20px)';
         card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(card);
-    });
-    
-    // Trigger animations for elements that should animate on page load
-    const sectionsToAnimate = document.querySelectorAll('.about-section, .links-section, .gallery-section');
-    const sectionObserver = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const animatedElements = entry.target.querySelectorAll('.will-animate');
-                animatedElements.forEach(element => {
-                    // Trigger the animation by ensuring the class is present
-                    element.classList.add('triggered');
-                });
-                sectionObserver.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    sectionsToAnimate.forEach(section => {
-        sectionObserver.observe(section);
     });
     
     // Check and show admin link if logged in
