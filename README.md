@@ -91,11 +91,11 @@ Then navigate to `http://localhost:8080` in your browser.
 The easiest way to customize your portfolio is through the admin panel:
 
 1. Navigate to `admin.html` in your browser
-2. Login with the default password (found in `admin.js`)
+2. Login with the default password: `admin123`
 3. **IMPORTANT**: Change the default password immediately:
    - After logging in, open your browser's developer console (F12)
    - Run: `await setNewPassword('your-secure-password')`
-   - Use a strong password (at least 8 characters)
+   - Use a strong password (at least 8 characters with letters, numbers, and symbols)
 4. Edit any content directly in the admin interface:
    - Artist name and tagline
    - About section text

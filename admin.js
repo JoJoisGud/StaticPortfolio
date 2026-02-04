@@ -12,7 +12,7 @@ const PASSWORD_HASH_KEY = 'portfolio_password_hash';
 // Default password hash (for 'admin123')
 // This hash was generated using PBKDF2 with 100,000 iterations
 // To change password: Use the setNewPassword() function in browser console
-const DEFAULT_PASSWORD_HASH = 'pbkdf2_sha256$100000$8f3c4d2e1a6b9f7c$a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6';
+const DEFAULT_PASSWORD_HASH = 'pbkdf2_sha256$100000$bfa785a7e23e38075012aaba232f850e$05f88176ca7e196cdb01c81d46d5716ad81628b348a9a0159de755471a0e32dd';
 
 // HTML escape function to prevent XSS
 function escapeHtml(text) {
@@ -110,7 +110,7 @@ function initializePasswordHash() {
 // Function to change password (call from browser console)
 async function setNewPassword(newPassword) {
     if (!newPassword || newPassword.length < 8) {
-        console.error('Password must be at least 8 characters long');
+        console.error('Password must be at least 8 characters long. Consider using a mix of letters, numbers, and symbols for better security.');
         return false;
     }
     
