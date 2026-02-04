@@ -19,6 +19,17 @@ function escapeAttribute(text) {
         .replace(/>/g, '&gt;');
 }
 
+// Show admin link if logged in
+function checkAndShowAdminLink() {
+    const session = localStorage.getItem(SESSION_KEY);
+    if (session === 'authenticated') {
+        const adminNavItem = document.getElementById('admin-nav-item');
+        if (adminNavItem) {
+            adminNavItem.style.display = 'block';
+        }
+    }
+}
+
 function loadPortfolioContent() {
     const savedContent = localStorage.getItem(CONTENT_KEY);
     if (!savedContent) return null;
@@ -87,6 +98,9 @@ function applyContent(content) {
 
 // Generate dynamic mosaic background from art pieces
 document.addEventListener('DOMContentLoaded', function() {
+    // Check and show admin link if logged in
+    checkAndShowAdminLink();
+    
     // Load and apply custom content
     const content = loadPortfolioContent();
     if (content) {
