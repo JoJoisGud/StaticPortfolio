@@ -9,6 +9,14 @@ const SESSION_KEY = 'portfolio_admin_session';
 const CONTENT_KEY = 'portfolio_content';
 const PASSWORD_HASH_KEY = 'portfolio_password_hash';
 
+// Constants for image upload and gallery management
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB max file size
+const DEFAULT_GALLERY_ITEM = {
+    image: 'images/art1.jpg',
+    title: 'New Piece',
+    category: 'Digital Art'
+};
+
 // Default password hash (for 'admin123')
 // This hash was generated using PBKDF2 with 100,000 iterations
 // To change password: Use the setNewPassword() function in browser console
@@ -275,12 +283,18 @@ function renderGalleryItems(items) {
     items.forEach((item, index) => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'gallery-item-edit';
+        const uploadId = `gallery-upload-${index}`;
         itemDiv.innerHTML = `
-            <img src="${escapeAttribute(item.image)}" alt="${escapeAttribute(item.title)}">
+            <img src="${escapeAttribute(item.image)}" alt="${escapeAttribute(item.title)}" id="gallery-preview-${index}">
             <div class="item-fields">
-                <div class="form-group" style="margin-bottom: 0.5rem;">
+                <div class="upload-section">
+                    <label for="${uploadId}"><strong>Upload New Image:</strong></label>
+                    <input type="file" id="${uploadId}" accept="image/*" onchange="handleImageUpload(event, ${index})" data-gallery-index="${index}">
+                    <small style="color: #6b7280;">Or enter an image URL below</small>
+                </div>
+                <div class="form-group" style="margin-bottom: 0.5rem; margin-top: 0.5rem;">
                     <label>Image URL</label>
-                    <input type="text" value="${escapeAttribute(item.image)}" data-gallery-index="${index}" data-gallery-field="image">
+                    <input type="text" value="${escapeAttribute(item.image)}" data-gallery-index="${index}" data-gallery-field="image" onchange="updateImagePreview(${index})">
                 </div>
                 <div class="form-group" style="margin-bottom: 0.5rem;">
                     <label>Title</label>
@@ -291,9 +305,91 @@ function renderGalleryItems(items) {
                     <input type="text" value="${escapeAttribute(item.category)}" data-gallery-index="${index}" data-gallery-field="category">
                 </div>
             </div>
+            <div class="reorder-buttons">
+                <button class="reorder-btn" onclick="moveGalleryItem(${index}, -1)" ${index === 0 ? 'disabled' : ''}>▲</button>
+                <button class="reorder-btn" onclick="moveGalleryItem(${index}, 1)" ${index === items.length - 1 ? 'disabled' : ''}>▼</button>
+                <button class="delete-btn" onclick="deleteGalleryItem(${index})">🗑️</button>
+            </div>
         `;
         container.appendChild(itemDiv);
     });
+}
+
+// Handle image upload
+function handleImageUpload(event, index) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Check file size limit
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+        alert('Image size must be less than 5MB');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imageData = e.target.result;
+        
+        // Update the image URL input field
+        const imageInput = document.querySelector(`[data-gallery-index="${index}"][data-gallery-field="image"]`);
+        if (imageInput) {
+            imageInput.value = imageData;
+            updateImagePreview(index);
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// Update image preview
+function updateImagePreview(index) {
+    const imageInput = document.querySelector(`[data-gallery-index="${index}"][data-gallery-field="image"]`);
+    const preview = document.getElementById(`gallery-preview-${index}`);
+    if (imageInput && preview) {
+        preview.src = imageInput.value;
+    }
+}
+
+// Move gallery item up or down
+function moveGalleryItem(index, direction) {
+    const savedContent = localStorage.getItem(CONTENT_KEY);
+    const content = savedContent ? JSON.parse(savedContent) : defaultContent;
+    
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= content.galleryItems.length) return;
+    
+    // Swap items
+    [content.galleryItems[index], content.galleryItems[newIndex]] = 
+    [content.galleryItems[newIndex], content.galleryItems[index]];
+    
+    // Save and re-render
+    localStorage.setItem(CONTENT_KEY, JSON.stringify(content));
+    renderGalleryItems(content.galleryItems);
+}
+
+// Delete gallery item
+function deleteGalleryItem(index) {
+    if (!confirm('Are you sure you want to delete this gallery item?')) return;
+    
+    const savedContent = localStorage.getItem(CONTENT_KEY);
+    const content = savedContent ? JSON.parse(savedContent) : defaultContent;
+    
+    content.galleryItems.splice(index, 1);
+    
+    // Save and re-render
+    localStorage.setItem(CONTENT_KEY, JSON.stringify(content));
+    renderGalleryItems(content.galleryItems);
+}
+
+// Add new gallery item
+function addNewGalleryItem() {
+    const savedContent = localStorage.getItem(CONTENT_KEY);
+    const content = savedContent ? JSON.parse(savedContent) : defaultContent;
+    
+    content.galleryItems.push({ ...DEFAULT_GALLERY_ITEM });
+    
+    // Save and re-render
+    localStorage.setItem(CONTENT_KEY, JSON.stringify(content));
+    renderGalleryItems(content.galleryItems);
 }
 
 // Save all changes

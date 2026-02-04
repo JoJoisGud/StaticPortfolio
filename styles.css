@@ -654,8 +654,26 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .nav-menu {
+    .nav-container {
+        flex-direction: column;
         gap: 1rem;
+        padding: 1rem;
+    }
+
+    .nav-menu {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-item {
+        width: 100%;
+    }
+
+    .nav-link {
+        display: block;
+        width: 100%;
     }
 
     .artist-name {
